@@ -2,14 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Adventure {
-    private Player player;
-    private Map gameMap;
 
-    public Adventure() {
-        player = new Player();
-        gameMap = new Map();
-    }
 
     private boolean gameIsRunning = true;
     private String input;
@@ -22,39 +15,6 @@ public class Adventure {
         this.gameIsRunning = gameIsRunning;
     }
 
-    void look() {
-        System.out.println("You're looking around in the room...");
-        getCurrentRoomDescription();
-    }
-
-    void help() {
-        System.out.println("\n\n( ಠ ͜ʖ ಠ ) Hello outcast it is I  --  Merlin, the great wizard. " +
-                "You've asked for advice " + "on your journey -- and so, i shall provide!." +
-                "\n\n( ಠ ͜ʖ ಠ )⊃══⛧⌒｡ ~ALAKAZAM~");
-        System.out.println("""
-                ________________________
-                Directions
-                Go north: "go north"
-                Go south: "go south"
-                Go west: "go west"
-                Go east: "go east"
-                ________________________
-                Interactions
-                Take item: "take" followed by item
-                Equip a weapon: "Equip" followed by weapon name
-                Drop item/weapon: "drop" followed by its name
-                See current inventory: "Inventory" or "inv"
-                Attack enemy: "attack" followed by enemy name
-                See your current condition: "health"
-                ________________________
-                Look around: "Look"
-                ________________________
-                Summon help: "Help"
-                ________________________
-                Exit the game: "Exit"
-                """);
-        System.out.println("Make your choice to proceed, " + player + "!");
-    }
 
     void exitGame() {
         setGameIsRunning(false);
@@ -65,60 +25,7 @@ public class Adventure {
         gameMap.addItems();
         player.setCurrentRoom(gameMap.room1);
 
-        System.out.println("Welcome young traveler, to the cave of the unforeseen.. If you dare enter, " +
-                "sign the waiver of \"prolly ok\"\n");
-        System.out.print("""
-                |The waiver of prolly ok                                            |
-                |bla bla, something about having being trapped forever jada jada..  |
-                |bla bla.. giving away your soul to the kingdom of mages jada jada..|
-                |SIGN HERE:\s """);
-        Scanner scanner = new Scanner(System.in);
-        player.setPlayerName(scanner.nextLine());
 
-        gameMap.room5.setDescription("You did it " + player + ".. when no one believed in you" +
-                ", not even yourself, so how'd u get out? like\n" +
-                "really please tell me, i need to know for realz man.. congratz");
-
-        gameMap.room6.setDescription("The room is full of gold and glitters," +
-                " but everytime your eyes gaze upon the treasures\n" +
-                "your butt starts to itch.. better keep moving before " +
-                "you make too much of a mess in your behind mr. " + player + "!");
-
-        gameMap.room9.setDescription("ey " + player + ", you are probably lost, like so many of us... " +
-                "better get moving.");
-
-        System.out.println("\nMuahaha, you now belong to the cave.. Find your way out and your soul shall be saved.." +
-                "\nI will grant you.. hmm.." +
-                "100 steps in my cave before exhaustion gets the best of you. - Waiiit..\"looking at the waiver\".. " +
-                "\nyour name is " + player + "?!.. for such " +
-                "a puny name i shall only provide you with 30 steps.. best of luck, you'll need it!");
-
-        System.out.println("""
-                 - Luckily your journey has been blessed by Merlin the great wizard and he wants you to succeed
-                he has bestowed upon you the gift of choice, and therefore you have the following choices:\s""");
-        System.out.println("""
-                ________________________
-                Directions
-                Go north: "go north"
-                Go south: "go south"
-                Go west: "go west"
-                Go east: "go east"
-                ________________________
-                Interactions
-                Take item: "take" followed by item
-                Equip a weapon: "Equip" followed by weapon name
-                Drop item/weapon: "drop" followed by its name
-                See current inventory: "Inventory"
-                Attack enemy: "attack" followed by enemy name
-                See your current condition: "health"
-                ________________________    
-                Look around: "Look"
-                ________________________
-                Summon help: "Help"
-                ________________________
-                Exit the game: "Exit"
-                """);
-        System.out.println("Best make haste, " + player + ", you don't have much time!");
 
         while (getGameIsRunning()) {
             if (player.getCurrentRoom() == gameMap.room5) {
@@ -306,57 +213,8 @@ public class Adventure {
                 System.out.println("You have " + (player.getMAX_STEPS() - player.getStepCounter()) + " steps left.");
             }
     }
-    public void printInventory() {
-        int itemNumber = 1;
-        if (player.inventorySize() != 0) {
-            for (Item item : player.getInventory()) {
-                System.out.println(itemNumber + ". " + item);
-                itemNumber++;
-            }
-            if (player.getCurrentWeapon() != null) {
-                System.out.println("\nCurrently equipped weapon:\n" + player.getCurrentWeapon()
-                        + "\nDamage: " + player.getCurrentWeaponDamage());
-            }
-        } else {
-            System.out.println("There is nothing in your inventory.");
-        }
-    }
 
-    public void getCurrentRoomDescription() {
-        if (player.getCurrentRoomItems().size() < 1 && player.getCurrentRoom().getEnemies().size() < 1) {
-            System.out.println(player.getCurrentRoomDescription());
-            System.out.println("There's nothing of interest in the room");
-        } else if (player.getCurrentRoomItems().size() > 0 && player.getCurrentRoom().getEnemies().size() < 1) {
-            System.out.print(player.getCurrentRoomDescription() + "\nLooking around the room you see ");
-            for (int i = 0; i < player.getCurrentRoomItems().size(); i++)
-                if (1 == player.getCurrentRoomItems().size())
-                    System.out.println(player.getCurrentRoomItems().get(i).getFullName() + ".");
-                else if (i + 1 == player.getCurrentRoomItems().size()) {
-                    System.out.println("and " + player.getCurrentRoomItems().get(i).getFullName() + ".");
-                } else {
-                    System.out.print(player.getCurrentRoomItems().get(i).getFullName() + ", ");
-                }
-        } else if (player.getCurrentRoom().getEnemies().size() > 0 && player.getCurrentRoomItems().size() < 1) {
-            System.out.println(player.getCurrentRoomDescription());
-            for (int i = 0; i < player.getCurrentRoom().getEnemies().size(); i++)
-                System.out.println("You see a "
-                        + player.getCurrentRoom().getEnemies().get(i).getFullName());
-        } else if (player.getCurrentRoomItems().size() > 0 && player.getCurrentRoom().getEnemies().size() > 0) {
-            System.out.print(player.getCurrentRoomDescription() + "\nLooking around the room you see ");
-            for (int i = 0; i < player.getCurrentRoomItems().size(); i++)
-                if (1 == player.getCurrentRoomItems().size())
-                    System.out.println(player.getCurrentRoomItems().get(i).getFullName() + ".");
-                else if (i + 1 == player.getCurrentRoomItems().size()) {
-                    System.out.println("and " + player.getCurrentRoomItems().get(i).getFullName() + ".");
-                } else {
-                    System.out.print(player.getCurrentRoomItems().get(i).getFullName() + ", ");
-                }
-            for (int i = 0; i < player.getCurrentRoom().getEnemies().size(); i++)
-                System.out.println("You also see a "
-                        + player.getCurrentRoom().getEnemies().get(i).getFullName());
-        }
 
-    }
 
     public static void main(String[] args) {
         Adventure adventure = new Adventure();

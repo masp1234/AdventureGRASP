@@ -23,6 +23,7 @@ public class Room {
         this.south = room;
         this.south.north = this;
     }
+
     public void setEast(Room room) {
         this.east = room;
         this.east.west = this;
@@ -55,6 +56,7 @@ public class Room {
     public void setDescription(String description) {
         this.description = description;
     }
+
     public String toString() {
         return name;
     }
@@ -62,31 +64,40 @@ public class Room {
     public ArrayList<Item> getItems() {
         return this.items;
     }
+
     public Item findItem(String itemName) {
-        Item item;
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getName().equalsIgnoreCase(itemName)
-                    ^ items.get(i).toString().equalsIgnoreCase(itemName)) {
-                item = items.get(i);
-                return item;
+        Item foundItem = null;
+        for (Item item : items) {
+            if (item.getName().equalsIgnoreCase(itemName)
+                    ^ item.toString().equalsIgnoreCase(itemName)) {
+                foundItem = item;
             }
         }
-        return null;
+        return foundItem;
     }
 
     public ArrayList<Enemy> getEnemies() {
         return this.enemies;
     }
+
     public Enemy findEnemy(String enemyName) {
-        Enemy enemy;
-        for (int i = 0; i < enemies.size(); i++) {
-            if (enemies.get(i).getName().equalsIgnoreCase(enemyName)
-                    ^ enemies.get(i).toString().equalsIgnoreCase(enemyName)) {
-                enemy = enemies.get(i);
-                return enemy;
+        Enemy foundEnemy = null;
+        for (Enemy enemy : enemies) {
+            if (enemy.getName().equalsIgnoreCase(enemyName)
+                    ^ enemy.toString().equalsIgnoreCase(enemyName)) {
+                foundEnemy = enemy;
+
             }
         }
-        return null;
+        return foundEnemy;
+    }
+
+    public int getItemsSize() {
+        return items.size();
+    }
+
+    public int getEnemiesSize() {
+        return enemies.size();
     }
 }
 

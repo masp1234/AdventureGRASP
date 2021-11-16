@@ -33,7 +33,7 @@ public class Player {
     }
 
     public String getCurrentRoomDescription() {
-        return this.currentRoom.getDescription();
+        return currentRoom.getDescription();
     }
 
     public ArrayList<Item> getCurrentRoomItems() {
@@ -146,4 +146,17 @@ public class Player {
     public int getCurrentWeaponDamage() {
         return currentWeapon.getDamage();
     }
+
+    public int getCurrentRoomItemsSize() {
+        return currentRoom.getItemsSize();
+    }
+
+    public int getCurrentRoomEnemiesSize() {
+        return currentRoom.getEnemiesSize();
+    }
+
+    public Iterable<Enemy> getCurrentRoomEnemies() {
+        return currentRoom.getEnemies();
+    }
 }
+
