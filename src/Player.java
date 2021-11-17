@@ -74,6 +74,7 @@ public class Player {
         this.currentWeapon = weapon;
     }
 
+
     public void attack(Enemy enemy) {
         enemy.getHit(getCurrentWeapon().getDamage());
 
@@ -139,6 +140,14 @@ public class Player {
         }
         return status;
     }
+    public void checkStepCounter() {
+        if (player.getStepCounter() == 10 || player.getStepCounter() == 15 || player.getStepCounter() == 25)
+            if (player.getCurrentRoom() != gameMap.room5) {
+                System.out.println("You have walked " + player.getStepCounter() + " steps and are getting exhausted.");
+                System.out.println("You have " + (player.getMAX_STEPS() - player.getStepCounter()) + " steps left.");
+            }
+    }
+
 
     public Weapon getCurrentWeapon() {
         return currentWeapon;
@@ -157,6 +166,33 @@ public class Player {
 
     public Iterable<Enemy> getCurrentRoomEnemies() {
         return currentRoom.getEnemies();
+    }
+
+    public Room getCurrentRoomNorth() {
+        return currentRoom.getNorth();
+    }
+
+    public Room move(String direction) {
+        Room destination = null;
+        if (direction.equalsIgnoreCase("go north")) {
+            setCurrentRoom(currentRoom.getNorth());
+            destination = currentRoom.getNorth();
+        }
+        else if (direction.equalsIgnoreCase("go west")) {
+            setCurrentRoom(currentRoom.getWest());
+            destination = currentRoom.getWest();
+        }
+        else if (direction.equalsIgnoreCase("go south")) {
+            setCurrentRoom(currentRoom.getSouth());
+            destination = currentRoom.getSouth();
+        }
+        else if (direction.equalsIgnoreCase("go east")) {
+            setCurrentRoom(currentRoom.getEast());
+            destination = currentRoom.getEast();
+        }
+        incrementStepCounter();
+        checkStepCounter();
+        return destination;
     }
 }
 

@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class UserInterface {
     private Controller controller;
+    private Scanner scanner;
 
     public UserInterface(Controller controller) {
         this.controller = controller;
@@ -16,7 +17,7 @@ public class UserInterface {
                 |bla bla, something about having being trapped forever jada jada..  |
                 |bla bla.. giving away your soul to the kingdom of mages jada jada..|
                 |SIGN HERE:\s """);
-        Scanner scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
         controller.setPlayerName(scanner.nextLine());
 
         gameMap.room5.setDescription("You did it " + player + ".. when no one believed in you" +
@@ -43,6 +44,162 @@ public class UserInterface {
         options();
         System.out.println("Best make haste, " + controller.getPlayer() + ", you don't have much time!");
     }
+    public void choice() {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+
+        if (input.equalsIgnoreCase("exit")) {
+            System.out.println("Exiting game...");
+            exitGame();
+        } else if (input.equalsIgnoreCase("help")) {
+            help();
+        } else if (input.equalsIgnoreCase("look")) {
+            look();
+        } else if (input.equalsIgnoreCase("inventory")
+                || input.equalsIgnoreCase("inv")) {
+            printPlayerInventory();
+        } else if (input.equalsIgnoreCase("health")) {
+            System.out.println(controller.checkPlayerHealth());
+        } else if (input.contains("eat ")) {
+            if (player.getCurrentRoom().findItem(input.substring(4)) != null
+                    && player.getCurrentRoom().findItem(input.substring(4)) instanceof Consumable) {
+                player.eatConsumable((Food) player.getCurrentRoom().findItem(input.substring(4)));
+                player.getCurrentRoom().getItems().remove(player.getCurrentRoom().findItem(input.substring(4)));
+                System.out.println("You consumed " + input.substring(4));
+
+            } else if (player.findItem(input.substring(4)) != null
+                    && player.findItem(input.substring(4)) instanceof Consumable) {
+                System.out.println(player.getHealth());
+                player.eatConsumable((Consumable) player.findItem((input.substring(4))));
+                player.getInventory().remove(player.findItem(input.substring(4)));
+                System.out.println("You ate " + input.substring(4));
+                System.out.println(player.getHealth());
+            } else if (player.getCurrentRoom().findItem(input.substring(4)) != null
+                    && player.getCurrentRoom().findItem(input.substring(4)) instanceof Consumable != true
+                    || player.findItem(input.substring(4)) != null &&
+                    player.findItem(input.substring(4)) instanceof Consumable != true) {
+                System.out.println("You can't eat " + input.substring(4) + ".");
+            } else {
+                System.out.println("You don't have a " + input.substring(4) + " in your inventory.");
+            }
+
+        } else if (input.equalsIgnoreCase("dig")
+                && player.findItem("shovel") != null
+                && player.getCurrentRoom() == gameMap.room7) {
+            player.setCurrentRoom(gameMap.secretRoom);
+            System.out.println("You have entered the " + player.getCurrentRoom());
+            getCurrentRoomDescription();
+            // Bruger trim() så den ikke crasher
+        } else if (input.contains("drop")) {
+            if (player.findItem(input.substring(4).trim()) != null) {
+                player.dropItem(player.findItem(input.substring(4).trim()));
+                System.out.println("You dropped a " + input.substring(4).trim());
+            } else {
+                System.out.println("There is no such thing as a " + input.substring(5) + " in your inventory.");
+            }
+            // Vigtigt med mellemrum efter "take", da den ellers crasher. Har gjort det på en anden måde oppe i "drop".
+        } else if (input.contains("take ")) {
+            if (player.getCurrentRoom().findItem(input.substring(5)) != null) {
+                Item currentItem = (player.getCurrentRoom().findItem(input.substring(5)));
+                player.takeItem(currentItem);
+                System.out.println("You picked up a " + currentItem);
+            } else {
+                System.out.println("There is no such thing as a " + input.substring(5) + " in the room.");
+            }
+        } else if (input.contains("attack ")) {
+            if (controller.getPlayerHasWeapon()) {
+                System.out.println("You don't have a weapon equipped");
+            } else if (!player.getCurrentWeapon().usesLeft()) {
+                System.out.println("Your " +  controller.getPlayerCurrentWeapon() + " has no ammunition left, " +
+                        "you will have to use something else");
+            } else if (player.getCurrentRoom().getEnemies().size() < 1
+                    && player.getCurrentRoom().findEnemy(input.substring(7).trim()) == null) {
+                System.out.println("You attack the air in confusion");
+            } else if (player.getCurrentRoom().findEnemy(input.substring(7)) != null
+                    && player.getCurrentWeapon() != null) {
+
+                Enemy currentEnemy = player.getCurrentRoom().findEnemy(input.substring(7));
+                player.attack(currentEnemy);
+                System.out.println("You hit the " + currentEnemy + " for "
+                        + player.getCurrentWeapon().getDamage());
+                if (currentEnemy.getHealth() < 1) {
+                    Weapon droppedWeapon = currentEnemy.getCurrentWeapon();
+                    player.getCurrentRoomItems().add(droppedWeapon);
+                    player.getCurrentRoom().getEnemies().remove(currentEnemy);
+                    System.out.println("The " + input.substring(7) + " has died!");
+                } else if (currentEnemy.getHealth() > 0) {
+                    currentEnemy.attack(player);
+                    System.out.println("The " + currentEnemy + " hit you for "
+                            + currentEnemy.getCurrentWeapon().getDamage());
+                }
+            }
+        } else if (input.contains("equip ")) {
+            if (player.getCurrentRoom().findItem(input.substring(6)) != null
+                    && player.getCurrentRoom().findItem(input.substring(6)) instanceof Weapon) {
+                Weapon weapon = (Weapon) player.getCurrentRoom().findItem(input.substring(6));
+                player.equipWeapon(weapon);
+                System.out.println("You picked up and equipped the " + weapon);
+            } else if (player.findItem(input.substring(6)) != null
+                    && player.findItem(input.substring(6)) instanceof Weapon) {
+                Weapon weapon = (Weapon) player.findItem(input.substring(6));
+                player.equipWeapon(weapon);
+                System.out.println("You have equipped " + weapon + " from your inventory");
+            } else if (player.findItem(input.substring(6)) != null
+                    && !(player.findItem(input.substring(6)) instanceof Weapon)) {
+                System.out.println("You can't equip that");
+            } else if (player.getCurrentWeapon() != null && player.getCurrentWeapon().getName().equalsIgnoreCase(input.substring(6))) {
+                Weapon weapon = player.getCurrentWeapon();
+                System.out.println("You already have the " + weapon + " equipped");
+            } else if (player.getCurrentRoom().findItem(input.substring(6)) != null
+                    && !(player.getCurrentRoom().findItem(input.substring(6)) instanceof Weapon)) {
+                System.out.println("The " + input.substring(6) + " is not very effective to use as a weapon");
+            } else {
+                System.out.println("There is no such thing as a " + input.substring(6).trim() + " to equip");
+            }
+        } else if (!input.equalsIgnoreCase("look") && !input.equalsIgnoreCase("exit")
+                && !input.equalsIgnoreCase("help") && !input.equalsIgnoreCase("go east")
+                && !input.equalsIgnoreCase("go north") &&
+                !input.equalsIgnoreCase("go west") && !input.equalsIgnoreCase("go south")) {
+            System.out.println("Sorry i don't understand the input.. try again!");
+        } else {
+            String direction = input;
+                if (input.equalsIgnoreCase("go north") && controller.playerCurrentRoomHasNorth()) {
+                    Room destination = controller.movePlayer(direction);
+                    System.out.println("Going north!");
+                    System.out.println("You have entered the " + destination);
+                    getCurrentRoomDescription();
+
+
+                } else if (input.equalsIgnoreCase("go south") && player.getCurrentRoom().getSouth() != null) {
+                    player.setCurrentRoom(player.getCurrentRoom().getSouth());
+                    System.out.println("Going south!");
+                    System.out.println("You have entered the " + player.getCurrentRoom());
+                    getCurrentRoomDescription();
+
+
+                } else if (input.equalsIgnoreCase("go west") && player.getCurrentRoom().getWest() != null) {
+                    player.setCurrentRoom(player.getCurrentRoom().getWest());
+                    System.out.println("Going west!");
+                    System.out.println("You have entered the " + player.getCurrentRoom());
+                    getCurrentRoomDescription();
+
+
+                } else if (input.equalsIgnoreCase("go east") && player.getCurrentRoom().getEast() != null) {
+                    player.setCurrentRoom(player.getCurrentRoom().getEast());
+                    System.out.println("Going east!");
+                    System.out.println("You have entered the " + player.getCurrentRoom());
+                    getCurrentRoomDescription();
+
+                } else {
+                    if (!input.equalsIgnoreCase("exit"))
+                        System.out.println("Can't go that way");
+                }
+            }
+            controller.movePlayer(input);
+
+        }
+    }
+
 
     private void options() {
         System.out.println("""
@@ -68,14 +225,15 @@ public class UserInterface {
                 Exit the game: "Exit"
                 """);
     }
+
     void look() {
         System.out.println("You're looking around in the room...");
         getCurrentRoomDescription();
     }
 
 
-
     void help() {
+        System.out.print("\nSummoning a helping hand...");
         System.out.println("\n\n( ಠ ͜ʖ ಠ ) Hello outcast it is I  --  Merlin, the great wizard. " +
                 "You've asked for advice " + "on your journey -- and so, i shall provide!." +
                 "\n\n( ಠ ͜ʖ ಠ )⊃══⛧⌒｡ ~ALAKAZAM~");

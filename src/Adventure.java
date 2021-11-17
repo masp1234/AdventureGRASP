@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 
 
-    private boolean gameIsRunning = true;
+
     private String input;
 
     public Boolean getGameIsRunning() {
@@ -27,22 +27,7 @@ import java.util.Scanner;
 
 
 
-        while (getGameIsRunning()) {
-            if (player.getCurrentRoom() == gameMap.room5) {
-                System.out.println("You win, game over!");
-                setGameIsRunning(false);
-            } else if (player.getStepCounter() == player.getMAX_STEPS()) {
-                System.out.println("You died of exhaustion");
-                setGameIsRunning(false);
-            } else if (player.getHealth() < 1) {
-                System.out.println("You suddenly die of an unknown cause" +
-                        ", although it was most likely a banana overdose.");
-                setGameIsRunning(false);
-            } else {
-                choice();
-            }
-        }
-    }
+
 
     public void choice() {
         Scanner scanner = new Scanner(System.in);
@@ -206,13 +191,6 @@ import java.util.Scanner;
         }
     }
 
-    public void checkStepCounter() {
-        if (player.getStepCounter() == 10 || player.getStepCounter() == 15 || player.getStepCounter() == 25)
-            if (player.getCurrentRoom() != gameMap.room5) {
-                System.out.println("You have walked " + player.getStepCounter() + " steps and are getting exhausted.");
-                System.out.println("You have " + (player.getMAX_STEPS() - player.getStepCounter()) + " steps left.");
-            }
-    }
 
 
 

@@ -4,9 +4,15 @@ public class Controller {
     private Player player;
     private Map gameMap;
 
+
+
+
     public Controller() {
         player = new Player();
         gameMap = new Map();
+    }
+    public void run() {
+
     }
     public Player getPlayer() {
         return player;
@@ -49,5 +55,29 @@ public class Controller {
 
     public Iterable<Enemy> getPLayerCurrentRoomEnemiesList() {
         return player.getCurrentRoomEnemies();
+    }
+
+    public String checkPlayerHealth() {
+        return player.checkHealth();
+    }
+
+    public boolean getPlayerHasWeapon() {
+        boolean hasWeapon = false;
+        if (player.getCurrentWeapon() != null) {
+            hasWeapon = true;
+        }
+        return hasWeapon;
+    }
+
+    public boolean playerCurrentRoomHasNorth() {
+        boolean hasNorth = false;
+        if (player.getCurrentRoomNorth() != null) {
+            hasNorth = true;
+        }
+        return hasNorth;
+    }
+    public Room movePlayer(String direction) {
+       return player.move(direction);
+
     }
 }
