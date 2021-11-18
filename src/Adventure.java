@@ -190,13 +190,3 @@ import java.util.Scanner;
                 System.out.println("Can't go that way");
         }
     }
-
-
-
-
-    public static void main(String[] args) {
-        Adventure adventure = new Adventure();
-        adventure.run();
-
-    }
-}

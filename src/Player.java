@@ -46,7 +46,7 @@ public class Player {
     }
 
     public String toString() {
-        return this.getPlayerName();
+        return this.playerName;
     }
 
 
@@ -85,7 +85,7 @@ public class Player {
     }
 
     public Item findItem(String itemName) {
-        Item item;
+        Item item = null;
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getName().equalsIgnoreCase(itemName)
                     || inventory.get(i).toString().equalsIgnoreCase(itemName)) {
@@ -93,7 +93,7 @@ public class Player {
                 return item;
             }
         }
-        return null;
+        return item;
     }
 
     public void takeItem(Item item) {
@@ -140,12 +140,13 @@ public class Player {
         }
         return status;
     }
-    public void checkStepCounter() {
-        if (player.getStepCounter() == 10 || player.getStepCounter() == 15 || player.getStepCounter() == 25)
-            if (player.getCurrentRoom() != gameMap.room5) {
-                System.out.println("You have walked " + player.getStepCounter() + " steps and are getting exhausted.");
-                System.out.println("You have " + (player.getMAX_STEPS() - player.getStepCounter()) + " steps left.");
+    public String checkStepCounter() {
+        String message = null;
+        if (getStepCounter() == 10 || getStepCounter() == 15 || getStepCounter() == 25) {
+                message = "You have walked " + getStepCounter() + " steps and are getting exhausted. " +
+                        "\nYou have " + (getMAX_STEPS() - getStepCounter()) + " steps left.";
             }
+        return message;
     }
 
 
@@ -191,7 +192,6 @@ public class Player {
             destination = currentRoom.getEast();
         }
         incrementStepCounter();
-        checkStepCounter();
         return destination;
     }
 }

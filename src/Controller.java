@@ -80,4 +80,20 @@ public class Controller {
        return player.move(direction);
 
     }
+
+    public void makeConnections(String playerName) {
+        gameMap.makeConnections(playerName);
+    }
+
+    public String checkPlayerStepCounter() {
+        return player.checkStepCounter();
+    }
+
+    public Room getPlayerCurrentRoom() {
+        return player.getCurrentRoom();
+    }
+
+    public Room getWinningRoom() {
+        return gameMap.room5;
+    }
 }
