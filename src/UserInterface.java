@@ -139,8 +139,10 @@ public class UserInterface {
             } else if (player.findItem(input.substring(6)) != null
                     && !(player.findItem(input.substring(6)) instanceof Weapon)) {
                 System.out.println("You can't equip that");
-            } else if (player.getCurrentWeapon() != null && player.getCurrentWeapon().getName().equalsIgnoreCase(input.substring(6))) {
-                Weapon weapon = player.getCurrentWeapon();
+            } else if (controller.getPlayerCurrentWeapon() != null
+                    // TODO finde ud af, hvordan det her skal laves om
+                    && controller.getPlayerCurrentWeapon().getName().equalsIgnoreCase(input.substring(6))) {
+                Weapon weapon = controller.getPlayerCurrentWeapon();
                 System.out.println("You already have the " + weapon + " equipped");
             } else if (player.getCurrentRoom().findItem(input.substring(6)) != null
                     && !(player.getCurrentRoom().findItem(input.substring(6)) instanceof Weapon)) {
@@ -154,43 +156,17 @@ public class UserInterface {
                 !input.equalsIgnoreCase("go west") && !input.equalsIgnoreCase("go south")) {
             System.out.println("Sorry i don't understand the input.. try again!");
         } else {
-            String direction = input;
-            if (input.equalsIgnoreCase("go north") && controller.playerCurrentRoomHasNorth()) {
-                Room destination = controller.movePlayer(direction);
-                System.out.println("Going north!");
-                System.out.println("You have entered the " + destination);
-                getCurrentRoomDescription();
+            if (input.equalsIgnoreCase("go north") || input.equalsIgnoreCase("go south") ||
+                    input.equalsIgnoreCase("go west") || input.equalsIgnoreCase("go east")) {
+                if (controller.getPlayerCurrentRoom() != controller.getWinningRoom()) {
+                    controller.movePlayer(input);
+                    getCurrentRoomDescription();
+                    System.out.println(controller.checkPlayerStepCounter());
+                }
 
-
-            } else if (input.equalsIgnoreCase("go south") && player.getCurrentRoom().getSouth() != null) {
-                player.setCurrentRoom(player.getCurrentRoom().getSouth());
-                System.out.println("Going south!");
-                System.out.println("You have entered the " + player.getCurrentRoom());
-                getCurrentRoomDescription();
-
-
-            } else if (input.equalsIgnoreCase("go west") && player.getCurrentRoom().getWest() != null) {
-                player.setCurrentRoom(player.getCurrentRoom().getWest());
-                System.out.println("Going west!");
-                System.out.println("You have entered the " + player.getCurrentRoom());
-                getCurrentRoomDescription();
-
-
-            } else if (input.equalsIgnoreCase("go east") && player.getCurrentRoom().getEast() != null) {
-                player.setCurrentRoom(player.getCurrentRoom().getEast());
-                System.out.println("Going east!");
-                System.out.println("You have entered the " + player.getCurrentRoom());
-                getCurrentRoomDescription();
-
-            } else {
-                if (!input.equalsIgnoreCase("exit"))
-                    System.out.println("Can't go that way");
             }
         }
-        controller.movePlayer(input);
-        if (controller.getPlayerCurrentRoom() != controller.getWinningRoom()) {
-            System.out.println(controller.checkPlayerStepCounter());
-        }
+
 
     }
 
