@@ -28,6 +28,7 @@ public class Player {
     public List<Item> getInventory() {
         return inventory;
     }
+
     public int inventorySize() {
         return inventory.size();
     }
@@ -115,12 +116,16 @@ public class Player {
         }
     }
 
-    public void dropItem(Item item) {
-        if (item != null) {
-            getCurrentRoomItems().add(item);
-            inventory.remove(item);
+    public String dropItem(String itemName) {
+        String message;
+        if (findItem(itemName) != null) {
+            inventory.remove(findItem(itemName));
+            message = "You dropped a " + itemName + ".";
+        } else {
+            message = "There is no such thing as a " + itemName + " in your inventory.";
         }
 
+        return message;
     }
 
     public void eatConsumable(Consumable consumable) {
@@ -140,12 +145,13 @@ public class Player {
         }
         return status;
     }
+
     public String checkStepCounter() {
         String message = null;
         if (getStepCounter() == 10 || getStepCounter() == 15 || getStepCounter() == 25) {
-                message = "You have walked " + getStepCounter() + " steps and are getting exhausted. " +
-                        "\nYou have " + (getMAX_STEPS() - getStepCounter()) + " steps left.";
-            }
+            message = "You have walked " + getStepCounter() + " steps and are getting exhausted. " +
+                    "\nYou have " + (getMAX_STEPS() - getStepCounter()) + " steps left.";
+        }
         return message;
     }
 
@@ -153,6 +159,7 @@ public class Player {
     public Weapon getCurrentWeapon() {
         return currentWeapon;
     }
+
     public int getCurrentWeaponDamage() {
         return currentWeapon.getDamage();
     }
@@ -178,21 +185,45 @@ public class Player {
         if (direction.equalsIgnoreCase("go north")) {
             setCurrentRoom(currentRoom.getNorth());
             destination = currentRoom.getNorth();
-        }
-        else if (direction.equalsIgnoreCase("go west")) {
+        } else if (direction.equalsIgnoreCase("go west")) {
             setCurrentRoom(currentRoom.getWest());
             destination = currentRoom.getWest();
-        }
-        else if (direction.equalsIgnoreCase("go south")) {
+        } else if (direction.equalsIgnoreCase("go south")) {
             setCurrentRoom(currentRoom.getSouth());
             destination = currentRoom.getSouth();
-        }
-        else if (direction.equalsIgnoreCase("go east")) {
+        } else if (direction.equalsIgnoreCase("go east")) {
             setCurrentRoom(currentRoom.getEast());
             destination = currentRoom.getEast();
         }
         incrementStepCounter();
         return destination;
+    }
+
+    public String eat(String input) {
+        String message;
+        if (currentRoom.findItem(input) != null
+                && currentRoom.findItem(input) instanceof Consumable) {
+            Consumable foundConsumable = (Food) currentRoom.findItem(input);
+            eatConsumable(foundConsumable);
+            currentRoom.getItems().remove(currentRoom.findItem(input));
+            message = "You consumed " + input + ".";
+
+        } else if (findItem(input) != null
+                && findItem(input) instanceof Consumable) {
+            eatConsumable((Consumable) findItem((input)));
+            inventory.remove(findItem(input));
+            message = "You ate " + input + ".";
+
+        } else if (currentRoom.findItem(input) != null
+                && currentRoom.findItem(input) instanceof Consumable != true
+                || findItem(input) != null &&
+                findItem(input) instanceof Consumable != true) {
+            message = "You can't eat " + input + ".";
+        } else {
+            message = "You don't have a " + input + " in your inventory";
+        }
+        return message;
+
     }
 }
 

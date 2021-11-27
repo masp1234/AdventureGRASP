@@ -53,28 +53,7 @@ public class UserInterface {
         } else if (input.equalsIgnoreCase("health")) {
             System.out.println(controller.checkPlayerHealth());
         } else if (input.contains("eat ")) {
-            if (player.getCurrentRoom().findItem(input.substring(4)) != null
-                    && player.getCurrentRoom().findItem(input.substring(4)) instanceof Consumable) {
-                player.eatConsumable((Food) player.getCurrentRoom().findItem(input.substring(4)));
-                player.getCurrentRoom().getItems().remove(player.getCurrentRoom().findItem(input.substring(4)));
-                System.out.println("You consumed " + input.substring(4));
-
-            } else if (player.findItem(input.substring(4)) != null
-                    && player.findItem(input.substring(4)) instanceof Consumable) {
-                System.out.println(player.getHealth());
-                player.eatConsumable((Consumable) player.findItem((input.substring(4))));
-                player.getInventory().remove(player.findItem(input.substring(4)));
-                System.out.println("You ate " + input.substring(4));
-                System.out.println(player.getHealth());
-            } else if (player.getCurrentRoom().findItem(input.substring(4)) != null
-                    && player.getCurrentRoom().findItem(input.substring(4)) instanceof Consumable != true
-                    || player.findItem(input.substring(4)) != null &&
-                    player.findItem(input.substring(4)) instanceof Consumable != true) {
-                System.out.println("You can't eat " + input.substring(4) + ".");
-            } else {
-                System.out.println("You don't have a " + input.substring(4) + " in your inventory.");
-            }
-
+            System.out.println(controller.eat(input.substring(4)));
         } else if (input.equalsIgnoreCase("dig")
                 && player.findItem("shovel") != null
                 && player.getCurrentRoom() == gameMap.room7) {
@@ -82,13 +61,8 @@ public class UserInterface {
             System.out.println("You have entered the " + player.getCurrentRoom());
             getCurrentRoomDescription();
             // Bruger trim() så den ikke crasher
-        } else if (input.contains("drop")) {
-            if (player.findItem(input.substring(4).trim()) != null) {
-                player.dropItem(player.findItem(input.substring(4).trim()));
-                System.out.println("You dropped a " + input.substring(4).trim());
-            } else {
-                System.out.println("There is no such thing as a " + input.substring(5) + " in your inventory.");
-            }
+        } else if (input.contains("drop ")) {
+            System.out.println(controller.dropItem(input.substring(5)));
             // Vigtigt med mellemrum efter "take", da den ellers crasher. Har gjort det på en anden måde oppe i "drop".
         } else if (input.contains("take ")) {
             if (player.getCurrentRoom().findItem(input.substring(5)) != null) {

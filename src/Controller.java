@@ -96,4 +96,12 @@ public class Controller {
     public Room getWinningRoom() {
         return gameMap.room5;
     }
+
+    public String eat(String input) {
+        return player.eat(input);
+    }
+
+    public String dropItem(String name) {
+        return player.dropItem(name);
+    }
 }
