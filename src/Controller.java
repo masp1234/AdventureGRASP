@@ -104,4 +104,23 @@ public class Controller {
     public String dropItem(String name) {
         return player.dropItem(name);
     }
+
+    public String getCurrentRoomName() {
+        return player.getCurrentRoomName();
+    }
+
+
+    public Room dig() {
+       return player.dig();
+    }
+
+    public Item takeItem(String input) {'
+            return player.takeItem(input);
+
+    }
+
+    public void attack(String input) {
+        player.attack(input);
+    }
 }
+

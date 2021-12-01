@@ -5,6 +5,8 @@ public class Room {
     private Room south = null;
     private Room west = null;
     private Room east = null;
+    // TODO lav secretRoom
+    private Room secretRoom = null;
     private ArrayList<Item> items = new ArrayList<>();
     private ArrayList<Enemy> enemies = new ArrayList<>();
     private String name;
@@ -98,6 +100,21 @@ public class Room {
 
     public int getEnemiesSize() {
         return enemies.size();
+    }
+
+    public Room getSecretRoom() {
+        return secretRoom;
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    public void addItem(Weapon weapon) {
+    }
+
+    public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
     }
 }
 

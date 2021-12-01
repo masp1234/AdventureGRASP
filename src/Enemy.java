@@ -33,8 +33,8 @@ public class Enemy {
     public int getHealth() {
         return this.health;
     }
-    public void getHit(int damage) {
-        this.health = (getHealth() - damage);
+    public int getHit(int damage) {
+        return health = (getHealth() - damage);
     }
     public void attack(Player player) {
         player.getHit(getCurrentWeapon().getDamage());

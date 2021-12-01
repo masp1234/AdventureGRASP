@@ -76,9 +76,31 @@ public class Player {
     }
 
 
-    public void attack(Enemy enemy) {
-        enemy.getHit(getCurrentWeapon().getDamage());
-
+    public void attack(String input) {
+        String outcome = null;
+        if (currentWeapon == null) {
+            outcome = "You don't have a weapon equipped";
+        } else if (currentWeapon.usesLeft()) {
+            outcome = "Your " + currentWeapon + " has no ammunition left, " +
+                    "you will have to use something else";
+        } else if (currentRoom.getEnemies().size() < 1) {
+            outcome = "You attack the air in confusion";
+        } else if (currentRoom.findEnemy(input) != null) {
+            Enemy currentEnemy = currentRoom.findEnemy(input);
+            int damageDone = currentEnemy.getHit(currentWeapon.getDamage());
+            outcome = "You hit the " + currentEnemy + " for " + damageDone + ".";
+            if (currentEnemy.getHealth() < 1) {
+                Weapon droppedWeapon = currentEnemy.getCurrentWeapon();
+                currentRoom.addItem(droppedWeapon);
+                currentRoom.removeEnemy(currentEnemy);
+                outcome.concat("\nThe " + currentEnemy + " has died!");
+            } else if (currentEnemy.getHealth() > 0) {
+                // TODO Find en måde at fixe den høje kobling
+                getHit(currentEnemy.getCurrentWeapon().getDamage());
+                outcome.concat("The " + currentEnemy + " hit you for "
+                        + currentEnemy.getCurrentWeapon().getDamage());
+            }
+        }
     }
 
     public void getHit(int damage) {
@@ -97,11 +119,14 @@ public class Player {
         return item;
     }
 
-    public void takeItem(Item item) {
-        if (item != null) {
-            inventory.add(item);
-            getCurrentRoomItems().remove(item);
+    public Item takeItem(String input) {
+        Item foundItem = null;
+        if (currentRoom.findItem(input) != null) {
+            foundItem = currentRoom.findItem(input);
+            inventory.add(foundItem);
+            currentRoom.removeItem(foundItem);
         }
+        return foundItem;
 
     }
 
@@ -199,6 +224,7 @@ public class Player {
         return destination;
     }
 
+
     public String eat(String input) {
         String message;
         if (currentRoom.findItem(input) != null
@@ -224,6 +250,20 @@ public class Player {
         }
         return message;
 
+    }
+
+    public String getCurrentRoomName() {
+        return currentRoom.getName();
+    }
+
+
+    public Room dig() {
+        Room location = null;
+        if (findItem("shovel") != null && currentRoom.getSecretRoom() != null) {
+            setCurrentRoom(currentRoom.getSecretRoom());
+            location = currentRoom;
+        }
+        return location;
     }
 }
 
