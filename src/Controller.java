@@ -25,7 +25,7 @@ public class Controller {
         return player.inventorySize();
     }
 
-    public List<Item> getPlayerInventory() {
+    public Item[] getPlayerInventory() {
         return player.getInventory();
     }
 
@@ -57,7 +57,7 @@ public class Controller {
         return player.getCurrentRoomEnemies();
     }
 
-    public String checkPlayerHealth() {
+    public PlayerHealthStatus checkPlayerHealth() {
         return player.checkHealth();
     }
 

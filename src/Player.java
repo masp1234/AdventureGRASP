@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Player {
     private int stepCounter;
@@ -25,8 +26,13 @@ public class Player {
         }
     }
 
-    public List<Item> getInventory() {
-        return inventory;
+    public Item[] getInventory() {
+        /* Sorterer ArrayList'en i alfabetisk rækkefølge ud fra Item name, og smider derefter alle elementerne
+        over i et nyt Array med toArray(). Har kun brugt en Comparator for at have det med som et eksempel,
+        da det ikke giver den store mening at sortere denne liste.
+         */
+        Collections.sort(inventory, new ItemNameComparator());
+        return inventory.toArray(new Item[0]);
     }
 
     public int inventorySize() {
@@ -46,12 +52,12 @@ public class Player {
     }
 
     public String toString() {
-        return this.playerName;
+        return playerName;
     }
 
 
     public int getStepCounter() {
-        return this.stepCounter;
+        return stepCounter;
     }
 
     public void incrementStepCounter() {
@@ -59,11 +65,11 @@ public class Player {
     }
 
     public int getMAX_STEPS() {
-        return this.MAX_STEPS;
+        return MAX_STEPS;
     }
 
     public String getPlayerName() {
-        return this.playerName;
+        return playerName;
     }
 
     public void setPlayerName(String playerName) {
@@ -178,16 +184,16 @@ public class Player {
         setHealth(getHealth() + consumable.getHealthValue());
     }
 
-    public String checkHealth() {
-        String status = "";
+    public PlayerHealthStatus checkHealth() {
+        PlayerHealthStatus status = null;
         if (getHealth() > 74) {
-            status = "You are in great health and ready to fight!";
+            status = PlayerHealthStatus.VERY_HIGH;
         } else if (getHealth() <= 74 && getHealth() > 50) {
-            status = "You are slightly wounded but can still fight.";
+            status = PlayerHealthStatus.HIGH;
         } else if (getHealth() <= 50 && getHealth() > 25) {
-            status = "You are in poor shape and should probably eat something";
+            status = PlayerHealthStatus.LOW;
         } else if (getHealth() <= 25) {
-            status = "You are severely wounded and need to avoid fighting if you can";
+            status = PlayerHealthStatus.VERY_LOW;
         }
         return status;
     }
@@ -277,6 +283,7 @@ public class Player {
         return currentRoom.getName();
     }
 
+    // TODO den her og andre lignende metoder skal højst sandsynligt ikke returnerer Room, måske en boolean eller enum
     public Room dig() {
         Room location = null;
         if (findItem("shovel") != null && currentRoom.getSecretRoom() != null) {

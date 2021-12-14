@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Map {
-
+// TODO Måske man kunne lægge navne og beskrivelser af rummene i en fil og så læse dem ind i stedet.
     Room room1 = new Room("cave entrance", "There is a glooming light in the corner, must be from" +
             " where you came in.. you¨ll have to take either the way " +
             "to the right or straight down to explore further..");

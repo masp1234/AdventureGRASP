@@ -57,16 +57,27 @@ public class UserInterface {
                 || input.equalsIgnoreCase("inv")) {
             printPlayerInventory();
         } else if (input.equalsIgnoreCase("health")) {
-            System.out.println(controller.checkPlayerHealth());
+            PlayerHealthStatus status = controller.checkPlayerHealth();
+            if (status == PlayerHealthStatus.VERY_HIGH) {
+                System.out.println("You are in great health and ready to fight!");
+            } else if (status == PlayerHealthStatus.HIGH) {
+                System.out.println("You are slightly wounded but can still fight.");
+            } else if (status == PlayerHealthStatus.LOW) {
+                System.out.println("You are in poor shape and should probably eat something.");
+            } else if (status == PlayerHealthStatus.VERY_LOW) {
+                System.out.println("You are severely wounded and need to avoid fighting if you can.");
+            }
+
         } else if (input.contains("eat ")) {
             Eat outcome = controller.eat(input.substring(4));
             if (outcome == Eat.EATEN) {
+                // TODO Måske lave en findItemInInventory metode og så skrive det returnede item ud.
+                // TODO måske lave en ekstra mulighed i Eat, der kunne hedde EATEN_FROM_INVENTORY og EATEN_FROM_ROOM
                 System.out.println("You consumed the " + input.substring(4));
-            }
-            else if (outcome == Eat.NOT_EDIBLE) {
+            } else if (outcome == Eat.NOT_EDIBLE) {
+                // TODO Måske lave en findItemInInventory metode og så skrive det returnede item ud.
                 System.out.println("You can't eat " + input.substring(4));
-            }
-            else {
+            } else if (outcome == Eat.NOT_FOUND) {
                 System.out.println("There is no such thing as a " + input.substring(4) +
                         " in your inventory, nor in the room.");
             }
