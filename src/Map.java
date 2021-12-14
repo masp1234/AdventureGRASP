@@ -22,17 +22,17 @@ public class Map {
     Room secretRoom = new Room("Pit of despair", "There is no way out");
 
 
-    public void makeConnections(String playerName){
-        room5.setDescription("You did it " + playerName + ".. when no one believed in you" +
+    public void makeConnections(Player player){
+        room5.setDescription("You did it " + player + ".. when no one believed in you" +
                 ", not even yourself, so how'd u get out? like\n" +
                 "really please tell me, i need to know for realz man.. congratz");
 
         room6.setDescription("The room is full of gold and glitters," +
                 " but everytime your eyes gaze upon the treasures\n" +
                 "your butt starts to itch.. better keep moving before " +
-                "you make too much of a mess in your behind mr. " + playerName + "!");
+                "you make too much of a mess in your behind mr. " + player + "!");
 
-        room9.setDescription("ey " + playerName + ", you are probably lost, like so many of us... " +
+        room9.setDescription("ey " + player + ", you are probably lost, like so many of us... " +
                 "better get moving.");
         room1.setEast(room2);
         room1.setSouth(room4);
@@ -43,6 +43,7 @@ public class Map {
         room6.setSouth(room9);
         room7.setEast(room8);
         room8.setEast(room9);
+        player.setCurrentRoom(room1);
         room4.getItems().add(new Thing("shovel"));
         room1.getItems().add(new Food());
         room1.getItems().add(new Food("edible lamp", 200));

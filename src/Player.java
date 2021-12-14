@@ -39,7 +39,6 @@ public class Player {
 
     public ArrayList<Item> getCurrentRoomItems() {
         return getCurrentRoom().getItems();
-
     }
 
     public void setCurrentRoom(Room room) {
@@ -76,7 +75,7 @@ public class Player {
     }
 
 
-    public void attack(String input) {
+    public String attack(String input) {
         String outcome = null;
         if (currentWeapon == null) {
             outcome = "You don't have a weapon equipped";
@@ -101,6 +100,7 @@ public class Player {
                         + currentEnemy.getCurrentWeapon().getDamage());
             }
         }
+        return outcome;
     }
 
     public void getHit(int damage) {
@@ -124,28 +124,49 @@ public class Player {
         if (currentRoom.findItem(input) != null) {
             foundItem = currentRoom.findItem(input);
             inventory.add(foundItem);
-            currentRoom.removeItem(foundItem);
+            currentRoom.removeItem(currentRoom.findItem(input));
         }
         return foundItem;
-
     }
 
-    public void equipWeapon(Weapon weapon) {
-        if (weapon != null) {
+    public String equipWeapon(String input) {
+        String outcome;
+        if (currentRoom.findItem(input) != null && currentRoom.findItem(input) instanceof Weapon) {
             if (currentWeapon != null) {
                 inventory.add(currentWeapon);
             }
+            Weapon weapon = (Weapon) currentRoom.findItem(input);
             setCurrentWeapon(weapon);
-            getCurrentRoomItems().remove(weapon);
+            currentRoom.removeItem(weapon);
+            outcome = "You picked up and equipped the " + weapon;
+        } else if (findItem(input) != null && findItem(input) instanceof Weapon) {
+            if (currentWeapon != null) {
+                inventory.add(currentWeapon);
+            }
+            Weapon weapon = (Weapon) findItem(input);
+            setCurrentWeapon(weapon);
             inventory.remove(weapon);
+            outcome = "You have equipped " + weapon + " from your inventory";
+        } else if (findItem(input) != null && !(findItem(input) instanceof Weapon)) {
+            outcome = "You can't equip that";
+        } else if (currentWeapon != null && currentWeapon.getName().equalsIgnoreCase(input)) {
+            outcome = "You already have the " + currentWeapon + " equipped";
+        } else if (currentRoom.findItem(input) != null
+                && !(currentRoom.findItem(input) instanceof Weapon)) {
+            outcome = "The " + input + " is not very effective to use as a weapon";
+        } else {
+            outcome = "There is no such thing as a " + input.trim() + " to equip";
         }
+        return outcome;
     }
 
     public String dropItem(String itemName) {
         String message;
         if (findItem(itemName) != null) {
+            currentRoom.addItem(findItem(itemName));
             inventory.remove(findItem(itemName));
             message = "You dropped a " + itemName + ".";
+
         } else {
             message = "There is no such thing as a " + itemName + " in your inventory.";
         }
@@ -180,7 +201,6 @@ public class Player {
         return message;
     }
 
-
     public Weapon getCurrentWeapon() {
         return currentWeapon;
     }
@@ -204,58 +224,58 @@ public class Player {
     public Room getCurrentRoomNorth() {
         return currentRoom.getNorth();
     }
-
-    public Room move(String direction) {
-        Room destination = null;
-        if (direction.equalsIgnoreCase("go north")) {
+// FIXME måske lave move om så Room har checkNorth, checkSouth osv, som returnerer en boolean, og så goNorth osv i player
+    public boolean move(String direction) {
+        boolean hasMoved = false;
+        if (direction.equalsIgnoreCase("go north") && currentRoom.getNorth() != null) {
             setCurrentRoom(currentRoom.getNorth());
-            destination = currentRoom.getNorth();
-        } else if (direction.equalsIgnoreCase("go west")) {
+            hasMoved = true;
+            incrementStepCounter();
+        } else if (direction.equalsIgnoreCase("go west") && currentRoom.getWest() != null) {
             setCurrentRoom(currentRoom.getWest());
-            destination = currentRoom.getWest();
-        } else if (direction.equalsIgnoreCase("go south")) {
+            hasMoved = true;
+            incrementStepCounter();
+        } else if (direction.equalsIgnoreCase("go south") && currentRoom.getSouth() != null) {
             setCurrentRoom(currentRoom.getSouth());
-            destination = currentRoom.getSouth();
-        } else if (direction.equalsIgnoreCase("go east")) {
+            hasMoved = true;
+            incrementStepCounter();
+        } else if (direction.equalsIgnoreCase("go east") && currentRoom.getEast() != null) {
             setCurrentRoom(currentRoom.getEast());
-            destination = currentRoom.getEast();
+            hasMoved = true;
+            incrementStepCounter();
         }
-        incrementStepCounter();
-        return destination;
+        return hasMoved;
     }
 
-
-    public String eat(String input) {
-        String message;
+    public Eat eat(String input) {
+        Eat outcome;
         if (currentRoom.findItem(input) != null
                 && currentRoom.findItem(input) instanceof Consumable) {
             Consumable foundConsumable = (Food) currentRoom.findItem(input);
             eatConsumable(foundConsumable);
-            currentRoom.getItems().remove(currentRoom.findItem(input));
-            message = "You consumed " + input + ".";
+            currentRoom.removeItem(foundConsumable);
+            outcome = Eat.EATEN;
 
         } else if (findItem(input) != null
                 && findItem(input) instanceof Consumable) {
             eatConsumable((Consumable) findItem((input)));
             inventory.remove(findItem(input));
-            message = "You ate " + input + ".";
+            outcome = Eat.EATEN;
 
         } else if (currentRoom.findItem(input) != null
                 && currentRoom.findItem(input) instanceof Consumable != true
                 || findItem(input) != null &&
                 findItem(input) instanceof Consumable != true) {
-            message = "You can't eat " + input + ".";
+            outcome = Eat.NOT_EDIBLE;
         } else {
-            message = "You don't have a " + input + " in your inventory";
+            outcome = Eat.NOT_FOUND;
         }
-        return message;
-
+        return outcome;
     }
 
     public String getCurrentRoomName() {
         return currentRoom.getName();
     }
-
 
     public Room dig() {
         Room location = null;

@@ -110,7 +110,8 @@ public class Room {
         items.remove(item);
     }
 
-    public void addItem(Weapon weapon) {
+    public void addItem(Item item) {
+        items.add(item);
     }
 
     public void removeEnemy(Enemy enemy) {

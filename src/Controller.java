@@ -76,13 +76,13 @@ public class Controller {
         }
         return hasNorth;
     }
-    public Room movePlayer(String direction) {
+    public boolean movePlayer(String direction) {
        return player.move(direction);
 
     }
 
-    public void makeConnections(String playerName) {
-        gameMap.makeConnections(playerName);
+    public void makeConnections(Player player) {
+        gameMap.makeConnections(player);
     }
 
     public String checkPlayerStepCounter() {
@@ -97,7 +97,7 @@ public class Controller {
         return gameMap.room5;
     }
 
-    public String eat(String input) {
+    public Eat eat(String input) {
         return player.eat(input);
     }
 
@@ -114,13 +114,19 @@ public class Controller {
        return player.dig();
     }
 
-    public Item takeItem(String input) {'
+    public Item takeItem(String input) {
             return player.takeItem(input);
+    }
+
+    public String attack(String input) {
+        return player.attack(input);
+    }
+
+    public String equipWeapon(String input) {
+        return player.equipWeapon(input);
+    }
+
 
     }
 
-    public void attack(String input) {
-        player.attack(input);
-    }
-}
 

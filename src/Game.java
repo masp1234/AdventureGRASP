@@ -1,10 +1,17 @@
 public class Game {
+    UserInterface ui;
+    Controller controller;
 
     public Game() {
-        Controller controller = new Controller();
-        UserInterface ui = new UserInterface(controller);
+        controller = new Controller();
+        ui = new UserInterface(controller);
     }
     public void run() {
+        ui.run();
+    }
 
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.run();
     }
 }
