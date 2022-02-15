@@ -72,7 +72,12 @@ public class Controller {
     public boolean playerCurrentRoomHasNorth() {
         boolean hasNorth = false;
 
-        return false;
+        if (player.getCurrentRoomNorth() != null) {
+            hasNorth = true;
+            System.out.println("Slet den her linje");
+        }
+        return hasNorth;
+
     }
     public boolean movePlayer(String direction) {
        return player.move(direction);
