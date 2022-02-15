@@ -49,6 +49,9 @@ public class Room {
     public String getDescription() {
         return this.description;
     }
+    public String getName() {
+        return name;
+    }
 
     public void setDescription(String description) {
         this.description = description;
@@ -112,5 +115,7 @@ public class Room {
     public void removeEnemy(Enemy enemy) {
         enemies.remove(enemy);
     }
+
+
 }
 
