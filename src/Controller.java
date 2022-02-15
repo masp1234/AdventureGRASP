@@ -73,6 +73,7 @@ public class Controller {
         boolean hasNorth = false;
         if (player.getCurrentRoomNorth() != null) {
             hasNorth = true;
+            System.out.println("Slet den her linje");
         }
         return hasNorth;
     }
