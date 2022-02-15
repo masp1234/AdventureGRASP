@@ -46,11 +46,6 @@ public class Room {
     public Room getEast() {
         return east;
     }
-
-    public String getName() {
-        return this.name;
-    }
-
     public String getDescription() {
         return this.description;
     }
