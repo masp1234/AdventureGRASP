@@ -71,10 +71,8 @@ public class Controller {
 
     public boolean playerCurrentRoomHasNorth() {
         boolean hasNorth = false;
-        if (player.getCurrentRoomNorth() != null) {
-            hasNorth = true;
-        }
-        return hasNorth;
+
+        return false;
     }
     public boolean movePlayer(String direction) {
        return player.move(direction);
